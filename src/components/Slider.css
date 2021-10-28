@@ -1,7 +1,50 @@
 .Slider {
-    height: 1200px;
-    width: 1920px;
-    background-color: yellow;
-    position: relative;
-    overflow:auto;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    overflow: hidden;
   }
+
+.primaryImage{
+  max-height: 1200px;
+  max-width: 1920px;
+}
+
+.title{
+  position:absolute;
+  top: 40px; 
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  text-transform: uppercase;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.creditLine{
+  position:absolute;
+  top: 80px; 
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.repository{
+  position:absolute;
+  bottom: 50px; 
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.dimensions{
+  position:absolute;
+  bottom: 30px; 
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.5);
+}
