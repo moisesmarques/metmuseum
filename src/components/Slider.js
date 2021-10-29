@@ -2,53 +2,78 @@ import './Slider.css';
 import React, { useState, useEffect } from 'react';
 import GetObject from '../services/GetObjectService';
 
-const slide_interval= 10000;
-
 function Slider({ items }) {
+
+  const slide_interval = 10; // seconds
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loadedItem, setLoadedItem] = useState(null);
   const [item, setItem] = useState(null);
   const [count, setCount] = useState(100000);
   const [play, setPlay] = useState(true);
+  const [secs, setSecs] = useState(0);
+  const [maxItems, setMaxItems] = useState(0);
+
 
   function playStop() {
     setPlay(!play);
     console.log("play ", !play);
   }
 
+  // set maxItems
   useEffect(() => {
+    if(items)
+      setMaxItems(items.length);
+  }, [items]);
 
-    const fetchData = () => GetObject(items[count])
+  // search for next images
+  useEffect(() => {
+    if (!items[count])
+      return;
+
+    GetObject(items[count])
       .then(res => res.json())
       .then(
         (result) => {
-          if(!result.primaryImage)
-          {
-            console.log('no image. skipping.')
-            setCount(c => c + 1);
-            return;
+          if (!result.primaryImage) {
+            console.log('image not found. skipping.');
+            setCount(c => c < maxItems ? c + 1 : 0);
+          } else {
+            setIsLoaded(true);
+            setLoadedItem(result);
+            console.log('image found: ', result.primaryImage);
           }
-
-          setIsLoaded(true);
-          setItem(result);
-          console.log(result);
         },
         (error) => {
           setIsLoaded(true);
           setError(error);
         }
       );
+  }, [items, count, maxItems]);
 
+  // timer
+  useEffect(() => {
     if (play) {
-      fetchData();
       const id = setInterval(() => {
-        setCount(c => c + 1);
-      }, slide_interval);
+        setSecs( s => s + 1)
+      }, 1000);
       return () => clearInterval(id);
     }
+  }, [play]);
 
-  }, [items, play, count]);
+  // check timer & load 
+  useEffect(() => {
+    if(secs >= slide_interval){
+      setSecs(0);
+      if(play){
+        setItem(loadedItem);
+        setCount(c => c < maxItems ? c + 1 : 0);
+        console.log("image loaded: ", loadedItem.primaryImage);
+      }
+    } else
+      console.log(secs);
+  }, [secs, play, loadedItem, maxItems]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -57,17 +82,21 @@ function Slider({ items }) {
   } else if (item && play) {
     return (
       <div className="Slider" onClick={playStop} >
-        <img src={item.primaryImage} alt={item.title} className="primaryImage"/>
+        <img src={item.primaryImage} alt={item.title} className="primaryImage" />
+        <p className="source">{item.primaryImage} - current {count}, total {maxItems}</p>
+        <p className="secs">{secs}</p>
       </div>
     );
   } else if (item && !play) {
     return (
       <div className="Slider" onClick={playStop} >
+        <img src={item.primaryImage} alt={item.title} className="primaryImage" />
         <h1 className="title">{item.title}</h1>
-          <img src={item.primaryImage} alt={item.title} className="primaryImage"/>
         <h2 className="creditLine">{item.creditLine}</h2>
         <h3 className="repository">{item.repository}</h3>
         <p className="dimensions">{item.dimensions}</p>
+        <p className="source">{item.primaryImage} - current {count}, total {maxItems}</p>
+        <p className="secs">{secs}</p>
       </div>
     );
   } else

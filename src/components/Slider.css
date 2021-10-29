@@ -1,5 +1,7 @@
 .Slider {
     margin: 0;
+    height: 1200px;
+    width: 1920px;
     position: absolute;
     top: 50%;
     -ms-transform: translateY(-50%);
@@ -10,6 +12,10 @@
 .primaryImage{
   max-height: 1200px;
   max-width: 1920px;
+  position: relative;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .title{
@@ -19,32 +25,47 @@
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
   text-transform: uppercase;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .creditLine{
   position:absolute;
-  top: 80px; 
+  top: 140px; 
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .repository{
   position:absolute;
-  bottom: 50px; 
+  bottom: 60px; 
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .dimensions{
   position:absolute;
-  bottom: 30px; 
+  bottom: 20px; 
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.7);
 }
+
+.source{
+  position: absolute;
+  bottom: 0; 
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.secs{
+  position: absolute;
+  bottom: 0; 
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
