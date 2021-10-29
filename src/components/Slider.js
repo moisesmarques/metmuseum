@@ -64,37 +64,38 @@ function Slider({ items }) {
 
   // check timer & load 
   useEffect(() => {
+
+    if(!play)
+      return;
+
+    if(!item && loadedItem){
+      setItem(loadedItem);
+      return;
+    }
+
     if(secs >= slide_interval){
       setSecs(0);
-      if(play){
-        setItem(loadedItem);
-        setCount(c => c < maxItems ? c + 1 : 0);
-        console.log("image loaded: ", loadedItem.primaryImage);
-      }
+      setItem(loadedItem);
+      setCount(c => c < maxItems ? c + 1 : 0);
+      console.log("image loaded: ", loadedItem.primaryImage);
+      return;
     } else
       console.log(secs);
-  }, [secs, play, loadedItem, maxItems]);
+  }, [secs, play, loadedItem, maxItems, item]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
     return <div>Loading...</div>;
-  } else if (item && play) {
+  } else if (item) {
     return (
       <div className="Slider" onClick={playStop} >
+        <img src={loadedItem.primaryImage} alt={loadedItem.title} className="preloadImage" />
         <img src={item.primaryImage} alt={item.title} className="primaryImage" />
-        <p className="source">{item.primaryImage} - current {count}, total {maxItems}</p>
-        <p className="secs">{secs}</p>
-      </div>
-    );
-  } else if (item && !play) {
-    return (
-      <div className="Slider" onClick={playStop} >
-        <img src={item.primaryImage} alt={item.title} className="primaryImage" />
-        <h1 className="title">{item.title}</h1>
-        <h2 className="creditLine">{item.creditLine}</h2>
-        <h3 className="repository">{item.repository}</h3>
-        <p className="dimensions">{item.dimensions}</p>
+        { !play && <h1 className="title">{item.title}</h1> }
+        { !play && <h2 className="creditLine">{item.creditLine}</h2> }
+        { !play && <h3 className="repository">{item.repository}</h3> }
+        { !play && <p className="dimensions">{item.dimensions}</p> }
         <p className="source">{item.primaryImage} - current {count}, total {maxItems}</p>
         <p className="secs">{secs}</p>
       </div>

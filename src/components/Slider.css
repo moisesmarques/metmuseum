@@ -18,6 +18,10 @@
   transform: translateY(-50%);
 }
 
+.preloadImage{
+  display: none;
+}
+
 .title{
   position:absolute;
   top: 40px; 
