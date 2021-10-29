@@ -5,7 +5,6 @@ import GetObject from '../services/GetObjectService';
 function Slider({ items }) {
 
   const slide_interval = 10; // seconds
-
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadedItem, setLoadedItem] = useState(null);
@@ -14,7 +13,7 @@ function Slider({ items }) {
   const [play, setPlay] = useState(true);
   const [secs, setSecs] = useState(0);
   const [maxItems, setMaxItems] = useState(0);
-
+  const [imageClassName, setImageClassName] = useState("primaryImage fade-in");
 
   function playStop() {
     setPlay(!play);
@@ -39,11 +38,12 @@ function Slider({ items }) {
           if (!result.primaryImage) {
             console.log('image not found. skipping.');
             setCount(c => c < maxItems ? c + 1 : 0);
-          } else {
-            setIsLoaded(true);
-            setLoadedItem(result);
-            console.log('image found: ', result.primaryImage);
+            return;
           }
+          setIsLoaded(true);
+          setLoadedItem(result);
+          console.log('image found: ', result.primaryImage);
+
         },
         (error) => {
           setIsLoaded(true);
@@ -70,6 +70,8 @@ function Slider({ items }) {
 
     if(!item && loadedItem){
       setItem(loadedItem);
+      setCount(c => c < maxItems ? c + 1 : 0);
+      console.log("image loaded: ", loadedItem.primaryImage);
       return;
     }
 
@@ -79,9 +81,32 @@ function Slider({ items }) {
       setCount(c => c < maxItems ? c + 1 : 0);
       console.log("image loaded: ", loadedItem.primaryImage);
       return;
-    } else
-      console.log(secs);
+    }
+
+    console.log(secs);
+
   }, [secs, play, loadedItem, maxItems, item]);
+
+  // fade primary image
+  useEffect(() => {
+    if (secs === (slide_interval - 1)) {
+      setImageClassName("primaryImage fade-out");
+      return;
+    }
+    if (secs === 0) {
+      setImageClassName("primaryImage fade-in");
+      return;
+    }
+  }, [secs]);
+
+   // skip repeated image
+   useEffect(() => {
+    if((loadedItem && item && loadedItem.primaryImage === item.primaryImage)){
+            console.log('repeated image. skipping.');
+            setCount(c => c < maxItems ? c + 1 : 0);
+            return;
+          }
+  }, [loadedItem, item]);
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -91,11 +116,11 @@ function Slider({ items }) {
     return (
       <div className="Slider" onClick={playStop} >
         <img src={loadedItem.primaryImage} alt={loadedItem.title} className="preloadImage" />
-        <img src={item.primaryImage} alt={item.title} className="primaryImage" />
-        { !play && <h1 className="title">{item.title}</h1> }
-        { !play && <h2 className="creditLine">{item.creditLine}</h2> }
-        { !play && <h3 className="repository">{item.repository}</h3> }
-        { !play && <p className="dimensions">{item.dimensions}</p> }
+        <img src={item.primaryImage} alt={item.title} className={imageClassName} />
+        { !play && <h1 className="title fade-in">{item.title}</h1> }
+        { !play && <h2 className="creditLine fade-in">{item.creditLine}</h2> }
+        { !play && <h3 className="repository fade-in">{item.repository}</h3> }
+        { !play && <p className="dimensions fade-in">{item.dimensions}</p> }
         <p className="source">{item.primaryImage} - current {count}, total {maxItems}</p>
         <p className="secs">{secs}</p>
       </div>
