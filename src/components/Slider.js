@@ -62,24 +62,26 @@ function Slider({ items }) {
     }
   }, [play]);
 
-  // check timer & load 
+  // check timer & load image
   useEffect(() => {
 
     if(!play)
       return;
 
-    if(!item && loadedItem){
+    const setCurrentItem = () => {
       setItem(loadedItem);
       setCount(c => c < maxItems ? c + 1 : 0);
       console.log("image loaded: ", loadedItem.primaryImage);
+    }
+
+    if(!item && loadedItem){
+      setCurrentItem();
       return;
     }
 
     if(secs >= slide_interval){
       setSecs(0);
-      setItem(loadedItem);
-      setCount(c => c < maxItems ? c + 1 : 0);
-      console.log("image loaded: ", loadedItem.primaryImage);
+      setCurrentItem();
       return;
     }
 
